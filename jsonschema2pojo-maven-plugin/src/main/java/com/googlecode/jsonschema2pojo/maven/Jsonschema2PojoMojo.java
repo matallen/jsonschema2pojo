@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -274,6 +275,12 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
     private MavenProject project;
 
     /**
+    * @parameter expression="${jsonschema2pojo.includeSubDirectories}"
+    * @since 0.3.6
+    */
+    private boolean includeSubDirectories=false;
+    
+    /**
      * Executes the plugin, to read the given source and behavioural properties
      * and generate POJOs. The current implementation acts as a wrapper around
      * the command line interface.
@@ -310,7 +317,22 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
         addProjectDependenciesToClasspath();
 
         try {
-            Jsonschema2Pojo.generate(this);
+          Jsonschema2Pojo.generate(this);
+          
+          if (includeSubDirectories){
+            String originalTargetPackage=targetPackage;
+            File originalSourceDirectory=sourceDirectory;
+            
+            for(File sub:sourceDirectory.listFiles()){
+              if (sub.isDirectory()){
+                sourceDirectory=new File(originalSourceDirectory, sub.getName());
+                targetPackage=originalTargetPackage+"."+sub.getName();
+                System.out.println("generating from :"+targetPackage+" to ["+outputDirectory.getPath()+"]");
+                Jsonschema2Pojo.generate(this);
+              }
+            }
+          }
+          
         } catch (IOException e) {
             throw new MojoExecutionException(
                     "Error generating classes from JSON Schema file(s) " + sourceDirectory.getPath(), e);
