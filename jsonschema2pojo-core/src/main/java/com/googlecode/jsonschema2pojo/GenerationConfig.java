@@ -56,6 +56,12 @@ public interface GenerationConfig {
     Iterator<File> getSource();
 
     /**
+     * Gets the 'exclude' regex when recursing subdirectories.
+     * @return The regex to be used as an exclusion
+     */
+    String getSourceExcludeRegex();
+    
+    /**
      * Gets the 'targetDirectory' configuration option.
      * 
      * @return The target directory into which generated types will be written

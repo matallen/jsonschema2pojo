@@ -50,6 +50,9 @@ public class Arguments implements GenerationConfig {
     @Parameter(names = { "-s", "--source" }, description = "The source file(s) or directory(ies) from which JSON Schema will be read", required = true, converter = FileConverter.class)
     private List<File> sourcePaths;
 
+    @Parameter(names = { "-r", "--source-include-regex" }, description = "A regular expression that matches all directories to be recursed")
+    private String sourceExcludeRegex;
+
     @Parameter(names = { "-b", "--generate-builders" }, description = "Generate builder-style methods as well as setters")
     private boolean generateBuilderMethods = false;
 
@@ -123,6 +126,11 @@ public class Arguments implements GenerationConfig {
     @Override
     public Iterator<File> getSource() {
         return sourcePaths.iterator();
+    }
+    
+    @Override
+    public String getSourceExcludeRegex(){
+        return sourceExcludeRegex;
     }
 
     @Override

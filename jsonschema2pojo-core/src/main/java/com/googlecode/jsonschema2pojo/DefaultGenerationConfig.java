@@ -49,6 +49,14 @@ public class DefaultGenerationConfig implements GenerationConfig {
     }
 
     /**
+     * @return regex that matches nothing, therefore excludes nothing
+     */
+    @Override
+    public String getSourceExcludeRegex(){
+      return "\\..+";
+    }
+
+    /**
      * @return the current working directory
      */
     @Override

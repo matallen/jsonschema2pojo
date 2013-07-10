@@ -69,7 +69,13 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
      * @since 0.1.0
      */
     private File sourceDirectory;
-
+    
+    /**
+     * Directory exclusions by regex when recursing subfolders to find schemas.
+     * @parameter expression="${jsonschema2pojo.sourceExcludeRegex}"
+     * @since 0.3.8
+     */
+    private String sourceExcludeRegex;
     /**
      * An array of locations of the JSON Schema file(s). Note: each item may
      * refer to a single file or a directory of files.
@@ -350,6 +356,14 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
             return Collections.singleton(sourceDirectory).iterator();
         }
         return Arrays.asList(sourcePaths).iterator();
+    }
+    
+    @Override
+    public String getSourceExcludeRegex(){
+      if (null!=sourceExcludeRegex){
+        return sourceExcludeRegex;
+      }
+      return "\\..+"; // all folders beginning with a dot
     }
 
     @Override

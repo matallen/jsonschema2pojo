@@ -61,6 +61,8 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
 
     private File source;
 
+    private String sourceExcludeRegex;
+
     private File targetDirectory;
 
     private String targetPackage;
@@ -208,6 +210,15 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
      */
     public void setSource(File source) {
         this.source = source;
+    }
+    
+    
+    @Override
+    public String getSourceExcludeRegex(){
+      if (null!=sourceExcludeRegex){
+        return sourceExcludeRegex;
+      }
+      return "\\..+"; // all folders beginning with a dot
     }
 
     /**
